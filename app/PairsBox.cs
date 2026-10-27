@@ -60,11 +60,6 @@ class PairsBox : Panel {
     readonly TextBox name;
     readonly ValueBox values;
     readonly Button showBtn, removeBtn;
-    // 2026-10-28 (Tefa: "so i can just press a drop down arrow and choose which pair i want to edit"): the list opens INSIDE the
-    // window, not as a Windows drop-down, whose list is a window of its own that Window View would never show in the headset
-    readonly FlowLayoutPanel list;
-    bool listOpen;
-    const int BASE_H = 112 + 7 * 40 + 170, LIST_ROW_H = 40;
     readonly Timer saveTimer = new Timer { Interval = 120 };
     List<Dictionary<string, object>> pairs = new List<Dictionary<string, object>>();
     int sel = -1;                            // index into pairs
@@ -73,7 +68,7 @@ class PairsBox : Panel {
 
     public PairsBox(ZoneFile file, Func<string> gunKey, Func<string, EventHandler, Button> btn) {
         this.file = file; this.gunKey = gunKey; this.btn = btn;
-        Dock = DockStyle.Top; Height = BASE_H; BackColor = Color.Transparent; Padding = new Padding(0, 6, 0, 6);
+        Dock = DockStyle.Top; Height = 112 + 7 * 40 + 170; BackColor = Color.Transparent; Padding = new Padding(0, 6, 0, 6);
         var inner = new SkinPanel { Dock = DockStyle.Fill, Tint = Color.FromArgb(150, Panel2), Padding = new Padding(8, 4, 8, 4) };
         Controls.Add(inner);
         var head = new SkinLabel { Dock = DockStyle.Top, Height = 28, Font = new Font("Segoe UI Semibold", 12f), ForeColor = Ink, Text = "HAND PAIRS" };
@@ -83,8 +78,6 @@ class PairsBox : Panel {
         var nav = new FlowLayoutPanel { Dock = DockStyle.Top, Height = 42, BackColor = Color.Transparent, WrapContents = false };
         nav.Controls.Add(btn("◀", (s, e) => Pick(sel - 1)));
         nav.Controls.Add(btn("▶", (s, e) => Pick(sel + 1)));
-        nav.Controls.Add(btn("PAIRS ▼", (s, e) => { listOpen = !listOpen; FillList(); }));
-        list = new FlowLayoutPanel { Dock = DockStyle.Top, Height = 0, BackColor = Color.Transparent, FlowDirection = FlowDirection.TopDown, WrapContents = false, Visible = false };
         nav.Controls.Add(btn("ADD A PAIR", (s, e) => Add()));
         showBtn = btn("HIDE", (s, e) => { shown = !shown; Save(); });
         nav.Controls.Add(showBtn);
@@ -99,12 +92,25 @@ class PairsBox : Panel {
             new ValueRow("ax", "START: right / left", "cm", -SIDE_CM, SIDE_CM, 0.5), new ValueRow("ar", "START: sphere size", "cm", 1, 30, 0.5),
             new ValueRow("lz", "LAND: forward / back", "cm", BACK_CM, AHEAD_CM, 0.5), new ValueRow("ly", "LAND: up / down", "cm", -SIDE_CM, SIDE_CM, 0.5),
             new ValueRow("lx", "LAND: right / left", "cm", -SIDE_CM, SIDE_CM, 0.5) }, () => Changed(), btn);
-        foreach (var c in new Control[] { values, nameRow, list, nav, which, note, head }) inner.Controls.Add(c);   // docked top: added last = shown first
+        foreach (var c in new Control[] { values, nameRow, nav, which, note, head }) inner.Controls.Add(c);   // docked top: added last = shown first
         saveTimer.Tick += (s, e) => { saveTimer.Stop(); Save(); };
         ShowPair();
     }
 
     void Changed() { if (!syncing) { saveTimer.Stop(); saveTimer.Start(); } }
+
+    // 2026-10-28 (Tefa: one list of every pair the gun in hand has): the window's PART list shows these and picks one
+    public List<KeyValuePair<int, string>> ForGun(string gun) {
+        var r = new List<KeyValuePair<int, string>>();
+        foreach (var d in pairs) {
+            string g = PairFile.Str(d, "gun");
+            if (g == "" || g == "any" || gun == "any" || g == gun) r.Add(new KeyValuePair<int, string>((int)PairFile.Num(d, "n"), PairFile.Str(d, "name")));
+        }
+        return r;
+    }
+    public void SelectNumber(int n) { int i = pairs.FindIndex(d => (int)PairFile.Num(d, "n") == n); if (i >= 0) Pick(i); }
+    public int SelectedNumber { get { return sel >= 0 && sel < pairs.Count ? (int)PairFile.Num(pairs[sel], "n") : 0; } }
+    public void AddNew() { Add(); }
     static string GunLabel(string g) { int n; return int.TryParse(g, out n) ? Program.GunName(n) : g; }
 
     // the file changed outside (the game never writes it; another copy of the window might): read it again
@@ -146,42 +152,10 @@ class PairsBox : Panel {
         }
         showBtn.Text = shown ? "HIDE" : "SHOW";
         syncing = false;
-        if (listOpen) FillList();
-    }
-
-    // one row per pair: its number, what it is for and its gun; the one being edited is marked; a click picks it and closes the list
-    void FillList() {
-        list.SuspendLayout();
-        var old = new List<Control>();
-        foreach (Control c in list.Controls) old.Add(c);
-        list.Controls.Clear();
-        foreach (var c in old) c.Dispose();
-        if (!listOpen || pairs.Count == 0) {
-            listOpen = false;
-            list.Visible = false;
-            list.Height = 0;
-            Height = BASE_H;
-        } else {
-            for (int i = 0; i < pairs.Count; i++) {
-                int pick = i;
-                var d = pairs[i];
-                string g = PairFile.Str(d, "gun");
-                var b = btn((i == sel ? "▶  " : "     ") + "PAIR " + (int)PairFile.Num(d, "n") + "  ·  " + PairFile.Str(d, "name") + "  ·  " +
-                            (g == "" || g == "any" ? "all guns" : GunLabel(g)), (s, e) => { listOpen = false; Pick(pick); BeginInvoke(new Action(FillList)); });
-                b.AutoSize = false;
-                b.Width = Math.Max(200, Width - 40);
-                b.TextAlign = ContentAlignment.MiddleLeft;
-                list.Controls.Add(b);
-            }
-            list.Height = pairs.Count * LIST_ROW_H + 4;
-            list.Visible = true;
-            Height = BASE_H + list.Height;
-        }
-        list.ResumeLayout();
     }
 
     void Pick(int i) {
-        if (pairs.Count == 0) { FillList(); return; }
+        if (pairs.Count == 0) return;
         Store();
         sel = ((i % pairs.Count) + pairs.Count) % pairs.Count;
         shown = true;

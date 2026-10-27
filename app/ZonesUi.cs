@@ -34,6 +34,17 @@ class ZonesUi : Form {
     // 2026-10-25 (Tefa: "all please"): the hand on the slide / pump / bolt (and its arc over the gun), and the gun in the right hand
     ValueBox handBox, aimBox;
     PairsBox pairsBox;   // 2026-10-25: the numbered hand pairs (PairsBox.cs)
+    // 2026-10-28 (Tefa: "list all the possible grip pairs for that weapon ... so that things fit into a window and i don't have to
+    // scroll down and up, i can just choose the parts i want from a drop down menu and all the needed sliders will appear"): ONE
+    // part at a time. PART opens a list INSIDE the window (a Windows drop-down's list is a window of its own, never shown by
+    // Window View in the headset) of what the gun in hand has; picking one shows only its boxes: where the left grip takes it
+    // (START) and where the hand sits (LAND).
+    class Entry { public string Key, Label; public Control[] Shows; }
+    string entryKey = "part";
+    Button partBtn;
+    FlowLayoutPanel partList;
+    const int PART_ROW_H = 40;
+    string partWord = "SLIDE / PUMP / BOLT";   // slide / pump / bolt: what the gun in hand has
     DateTime lastHandWrite = DateTime.MinValue;
 
     public ZonesUi(string gameArg) {
@@ -50,9 +61,9 @@ class ZonesUi : Form {
 
         scroll = new SkinPanel { Dock = DockStyle.Fill, AutoScroll = true, Padding = new Padding(8) };
         Controls.Add(scroll);
-        boxes.Add(new ZoneBox(this, "mag", "GRAB THE MAGAZINE", "left grip on the seated magazine"));
-        boxes.Add(new ZoneBox(this, "well", "THE WELL", "where a magazine goes back in (long guns)"));
-        boxes.Add(new ZoneBox(this, "part", "SLIDE / PUMP / BOLT", "left grip on it"));
+        boxes.Add(new ZoneBox(this, "mag", "START: GRAB THE MAGAZINE", "left grip on the seated magazine"));
+        boxes.Add(new ZoneBox(this, "well", "LAND: THE WELL", "where a magazine goes back in (long guns)"));
+        boxes.Add(new ZoneBox(this, "part", "START: SLIDE / PUMP / BOLT", "left grip in it takes it"));
         boxes.Add(new ZoneBox(this, "grip", "FRONT GRIP", "left grip in it holds the gun two-handed: this gun's kept grip spot, moved by these sliders"));
         // 2026-10-27: the parts some guns have (Program.HasPart): only the gun in hand's are shown
         boxes.Add(new ZoneBox(this, "handle", "GRIP HANDLE", "handguns: left grip in it cups the handle"));
@@ -72,6 +83,9 @@ class ZonesUi : Form {
         scroll.Controls.Add(aimBox);
         scroll.Controls.Add(handBox);
         for (int i = boxes.Count - 1; i >= 0; i--) scroll.Controls.Add(boxes[i]);   // docked top: added last = shown first
+        partList = new FlowLayoutPanel { Dock = DockStyle.Top, Height = 0, BackColor = Color.Transparent, FlowDirection = FlowDirection.TopDown, WrapContents = false, Visible = false };
+        scroll.Controls.Add(partList);   // above every box
+        entryKey = settings.Get("part", "part");
         BuildTop();
         BuildBottom();
 
@@ -106,7 +120,7 @@ class ZonesUi : Form {
     }
 
     void BuildTop() {
-        var top = new SkinPanel { Dock = DockStyle.Top, Height = 166, Tint = Color.FromArgb(120, Back) };
+        var top = new SkinPanel { Dock = DockStyle.Top, Height = 214, Tint = Color.FromArgb(120, Back) };
         Controls.Add(top);
         status = new SkinLabel { Dock = DockStyle.Top, Height = 34, Padding = new Padding(10, 8, 0, 0), ForeColor = Dim };
         var one = Row(42);
@@ -125,6 +139,12 @@ class ZonesUi : Form {
         three.Controls.Add(Btn("CLEAR ALL TICKS", (s, e) => Ticks.ClearAll()));
         nudgeNote = new SkinLabel { AutoSize = true, ForeColor = Dim, Padding = new Padding(4, 8, 0, 0) };
         three.Controls.Add(nudgeNote);
+        var four = Row(48);
+        partBtn = Btn("PART", (s, e) => { if (partList.Visible) CloseParts(); else OpenParts(); });
+        partBtn.Font = new Font("Segoe UI Semibold", 12f);
+        partBtn.AutoSize = false; partBtn.Width = 560; partBtn.Height = 40; partBtn.TextAlign = ContentAlignment.MiddleLeft;
+        four.Controls.Add(partBtn);
+        top.Controls.Add(four);
         top.Controls.Add(three);
         top.Controls.Add(two);
         top.Controls.Add(one);
@@ -137,6 +157,75 @@ class ZonesUi : Form {
     // 2026-10-25 (Tefa: "please remove that, i'm afraid to accidentally press it, i'll just ask you if i ever need to clear all of
     // it"): the FORGET THIS GUN'S / ALL-GUNS ZONES button is gone (a session clears zones.json by hand when asked)
     void BuildBottom() { }
+
+    // ---- one part at a time (2026-10-28) ----------------------------------------------------------------------------------
+    ZoneBox BoxOf(string slot) { foreach (var b in boxes) if (b.Slot == slot) return b; return null; }
+    bool Has(string slot) { int gun = live == null ? 0 : live.Gun; return allGuns.Checked || gun <= 0 || Program.HasPart(gun, slot); }
+
+    List<Entry> Entries() {
+        var r = new List<Entry>();
+        string partName = partWord.ToLowerInvariant();
+        if (Has("mag")) r.Add(new Entry { Key = "mag", Label = Has("well") ? "magazine  ->  the well" : "magazine",
+                                          Shows = Has("well") ? new Control[] { BoxOf("mag"), BoxOf("well") } : new Control[] { BoxOf("mag") } });
+        if (Has("part")) r.Add(new Entry { Key = "part", Label = partName + "  (where LG takes it, where the hand sits)", Shows = new Control[] { BoxOf("part"), handBox } });
+        r.Add(new Entry { Key = "grip", Label = "front grip", Shows = new Control[] { BoxOf("grip") } });
+        if (Has("handle")) r.Add(new Entry { Key = "handle", Label = "grip handle", Shows = new Control[] { BoxOf("handle") } });
+        if (Has("drum")) r.Add(new Entry { Key = "drum", Label = "the drum", Shows = new Control[] { BoxOf("drum") } });
+        if (Has("insert")) r.Add(new Entry { Key = "insert", Label = "insert point", Shows = new Control[] { BoxOf("insert") } });
+        r.Add(new Entry { Key = "aim", Label = "the gun in the right hand", Shows = new Control[] { aimBox } });
+        foreach (var p in pairsBox.ForGun(Group() == "default" ? "any" : Group()))
+            r.Add(new Entry { Key = "pair:" + p.Key, Label = "pair " + p.Key + "  -  " + p.Value, Shows = new Control[] { pairsBox } });
+        r.Add(new Entry { Key = "pair:new", Label = "+  a new pair", Shows = new Control[] { pairsBox } });
+        return r;
+    }
+
+    Entry Current(List<Entry> all) {
+        foreach (var e in all) if (e.Key == entryKey) return e;
+        if (entryKey.StartsWith("pair:"))   // a pair picked with the pairs box's own arrows is still "a pair"
+            foreach (var e in all) if (e.Key == "pair:" + pairsBox.SelectedNumber) return e;
+        return all[0];
+    }
+
+    // only the picked part's boxes are shown; called every poll, so a gun change follows at once
+    void ShowPart() {
+        var all = Entries();
+        var cur = Current(all);
+        var shown = new HashSet<Control>(cur.Shows);
+        foreach (var b in boxes) if (b.Visible != shown.Contains(b)) b.Visible = shown.Contains(b);
+        foreach (var c in new Control[] { handBox, aimBox, pairsBox }) if (c.Visible != shown.Contains(c)) c.Visible = shown.Contains(c);
+        string t = "PART:  " + cur.Label + "     \u25BC";
+        if (partBtn.Text != t) partBtn.Text = t;
+    }
+
+    void OpenParts() {
+        var all = Entries();
+        var cur = Current(all);
+        partList.SuspendLayout();
+        var old = new List<Control>();
+        foreach (Control c in partList.Controls) old.Add(c);
+        partList.Controls.Clear();
+        foreach (var c in old) c.Dispose();
+        foreach (var e in all) {
+            var pick = e;
+            var b = Btn((e == cur ? "\u25B6  " : "     ") + e.Label, (s, ev) => { PickPart(pick.Key); BeginInvoke(new Action(CloseParts)); });
+            b.AutoSize = false; b.Width = Math.Max(300, scroll.ClientSize.Width - 30); b.TextAlign = ContentAlignment.MiddleLeft;
+            partList.Controls.Add(b);
+        }
+        partList.Height = all.Count * PART_ROW_H + 4;
+        partList.Visible = true;
+        partList.ResumeLayout();
+        scroll.AutoScrollPosition = new Point(0, 0);
+    }
+    void CloseParts() { partList.Visible = false; partList.Height = 0; }
+
+    void PickPart(string key) {
+        if (key == "pair:new") { pairsBox.AddNew(); key = "pair:" + pairsBox.SelectedNumber; }
+        else if (key.StartsWith("pair:")) { int n; if (int.TryParse(key.Substring(5), out n)) pairsBox.SelectNumber(n); }
+        entryKey = key;
+        settings.Set("part", key);
+        ShowPart();
+        scroll.AutoScrollPosition = new Point(0, 0);
+    }
 
     // ---- the controller nudge (Nudge.cs, the same buttons as Hand Poser) -------------------------------------------------
     void ShowNudge() {
@@ -207,16 +296,14 @@ class ZonesUi : Form {
         try { string hp = HandFile.PathIn(file); if (hp != null && File.Exists(hp)) hw = File.GetLastWriteTime(hp); } catch (IOException) { }
         if (!saveTimer.Enabled && (gun != shownGun || w != lastZonesWrite || hw != lastHandWrite)) RefreshFromFile();
         if (handBox != null) {   // named for what the gun in hand has
-            string part = "BOLT";
+            string part = "SLIDE / PUMP / BOLT";   // no gun in hand: any of them
             if (live != null) foreach (var k in new[] { "bolt", "pump", "slide" }) { var z = live.Find(k); if (z != null && z.On) { part = k.ToUpperInvariant(); break; } }
-            handBox.Title = "HAND ON THE " + part;
+            handBox.Title = "LAND: HAND ON THE " + part;
+            partWord = part;
         }
-        foreach (var b in boxes) {
-            b.ShowLive(live);
-            bool has = allGuns.Checked || gun <= 0 || Program.HasPart(gun, b.Slot);
-            if (b.Visible != has) b.Visible = has;
-        }
+        foreach (var b in boxes) b.ShowLive(live);
         pairsBox.Poll();
+        ShowPart();
     }
 
     void RefreshFromFile() {
