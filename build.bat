@@ -7,7 +7,11 @@ set HERE=%~dp0
 if not exist "%HERE%dist" mkdir "%HERE%dist"
 if not exist "%HERE%build" mkdir "%HERE%build"
 "%WINDIR%\Microsoft.NET\Framework64\v4.0.30319\csc.exe" /nologo /target:winexe /optimize+ /win32icon:"%HERE%app\grip_zones.ico" ^
-   /out:"%HERE%dist\GripZones.exe" "%HERE%app\*.cs"
+   /main:Program /out:"%HERE%dist\GripZones.exe" "%HERE%app\*.cs"
 if errorlevel 1 (echo APP BUILD FAILED & exit /b 1)
+rem 2026-10-28: Dock Poser, the docked left wrist per gun and spot: its own window from the same files (dockposer\DockPoser.cs)
+"%WINDIR%\Microsoft.NET\Framework64\v4.0.30319\csc.exe" /nologo /target:winexe /optimize+ /win32icon:"%HERE%app\grip_zones.ico" ^
+   /main:DockPoserProgram /out:"%HERE%dist\DockPoser.exe" "%HERE%app\*.cs" "%HERE%dockposer\*.cs"
+if errorlevel 1 (echo DOCK POSER BUILD FAILED & exit /b 1)
 copy /y "%HERE%app\grip_zones.ico" "%HERE%dist\" >nul
 echo BUILD OK: %HERE%dist

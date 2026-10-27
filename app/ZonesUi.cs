@@ -64,6 +64,8 @@ class ZonesUi : Form {
         boxes.Add(new ZoneBox(this, "mag", "START: GRAB THE MAGAZINE", "left grip on the seated magazine"));
         boxes.Add(new ZoneBox(this, "well", "LAND: THE WELL", "where a magazine goes back in (long guns)"));
         boxes.Add(new ZoneBox(this, "part", "START: SLIDE / PUMP / BOLT", "left grip in it takes it"));
+        // 2026-10-28 (Tefa: "another pair is called slide left"): a pistol slide's left-side sphere, its own hold and pose
+        boxes.Add(new ZoneBox(this, "slide-left", "START: SLIDE, LEFT SIDE", "left grip in it takes the slide from the left (its own hold and Hand Poser pose)"));
         boxes.Add(new ZoneBox(this, "grip", "FRONT GRIP", "left grip in it holds the gun two-handed: this gun's kept grip spot, moved by these sliders"));
         // 2026-10-27: the parts some guns have (Program.HasPart): only the gun in hand's are shown
         boxes.Add(new ZoneBox(this, "handle", "GRIP HANDLE", "handguns: left grip in it cups the handle"));
@@ -167,7 +169,10 @@ class ZonesUi : Form {
         string partName = partWord.ToLowerInvariant();
         if (Has("mag")) r.Add(new Entry { Key = "mag", Label = Has("well") ? "magazine  ->  the well" : "magazine",
                                           Shows = Has("well") ? new Control[] { BoxOf("mag"), BoxOf("well") } : new Control[] { BoxOf("mag") } });
-        if (Has("part")) r.Add(new Entry { Key = "part", Label = partName + "  (where LG takes it, where the hand sits)", Shows = new Control[] { BoxOf("part"), handBox } });
+        if (Has("part") && Has("slide-left") && !allGuns.Checked && partName == "slide") {   // a pistol: the slide from either side
+            r.Add(new Entry { Key = "part", Label = "slide, right side  (where LG takes it, where the hand sits)", Shows = new Control[] { BoxOf("part"), handBox } });
+            r.Add(new Entry { Key = "slide-left", Label = "slide, left side  (where LG takes it, where the hand sits)", Shows = new Control[] { BoxOf("slide-left"), handBox } });
+        } else if (Has("part")) r.Add(new Entry { Key = "part", Label = partName + "  (where LG takes it, where the hand sits)", Shows = new Control[] { BoxOf("part"), handBox } });
         r.Add(new Entry { Key = "grip", Label = "front grip", Shows = new Control[] { BoxOf("grip") } });
         if (Has("handle")) r.Add(new Entry { Key = "handle", Label = "grip handle", Shows = new Control[] { BoxOf("handle") } });
         if (Has("drum")) r.Add(new Entry { Key = "drum", Label = "the drum", Shows = new Control[] { BoxOf("drum") } });

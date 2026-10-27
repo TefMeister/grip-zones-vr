@@ -54,3 +54,7 @@ If you should be credited here and are not, open an issue on this repository and
 ## Licence
 
 MIT for everything in this repository that we wrote.
+
+## Dock Poser
+
+A second small window in the same download (2026-10-28). It follows where the left hand is docked right now: the slide (either side), the magazine, rounds from the pouch, the grip handle, the drum, the insert point or a hand pair's landing spot. It shows six sliders for that gun and that spot only: move the hand forward, up or sideways, and tilt, turn or roll it. Every change is saved at once and the hand eases there. Built, not yet tried in the headset.

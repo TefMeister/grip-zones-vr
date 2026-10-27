@@ -19,6 +19,7 @@ class LiveZone {
 
 class LiveState {
     public int Gun;
+    public int Spot;   // 2026-10-28: where the left hand is (bridge slot 153), for Dock Poser
     public List<LiveZone> Zones = new List<LiveZone>();
     public LiveZone Find(string key) { foreach (var z in Zones) if (z.Key == key) return z; return null; }
 }
@@ -138,6 +139,7 @@ class ZoneFile {
             if (o == null) return null;
             object v;
             var st = new LiveState { Gun = o.TryGetValue("gun", out v) ? (int)Json.Num(v, 0) : 0 };
+            if (o.TryGetValue("spot", out v)) st.Spot = (int)Json.Num(v, 0);
             if (o.TryGetValue("zones", out v) && Json.Arr(v) != null)
                 foreach (var item in Json.Arr(v)) {
                     var z = Json.Obj(item);
