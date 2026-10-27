@@ -1,8 +1,9 @@
-# Grab Zones: move and resize Visceral RE8's grab zones from a desktop window
+# Grab Zones: move and resize where the hand can grab a gun in VR
 
 <img src="docs/window.png" width="420">
 
-A small desktop window for Visceral RE8 (Resident Evil Village VR). Every place the left hand can take hold of a gun is a zone:
+A small desktop window for VR gun handling. **For now it works with one game: Visceral RE8 (Resident Evil Village VR)**;
+it is meant to grow to more games as we mod them. Every place the left hand can take hold of a gun is a zone:
 grabbing the magazine, the well where a magazine goes back in, and the slide, pump or bolt. Each zone has sliders: forward /
 back, up / down, right / left, and its size. Move one and the zone moves on the gun in the game at once, together with its sphere
 when "SHOW THE SPHERES ON THE GUN" is ticked. The − and + buttons step half a centimetre, easier than dragging with a VR pointer.
@@ -14,17 +15,40 @@ zone back to the mod's own numbers; **FORGET THIS GUN'S ZONES** (click twice) do
 Made 2026-10-25 for tuning the zones inside the headset: Window View hangs this window in VR, the same way as Hand Poser.
 The same sliders are in the game's REFramework menu under "Visceral RE8 grab zones".
 
-## Build and install
+## Get it
 
-`build.bat` (only the C# compiler that ships with Windows), then `dist\GrabZones.exe --selftest build\selftest` (no game
-needed), then `install.ps1` for the desktop icon. The game half ships with Visceral RE8 (`..\tools\build.sh --deploy`).
+Download the zip from [Releases](https://github.com/TefMeister/grab-zones-vr/releases), unzip it, right-click
+`install.ps1` and choose **Run with PowerShell**. A **Grab Zones** icon appears on the desktop; no administrator rights
+are needed. The game half (the plugin that tests the hand and the script that draws the spheres) is part of Visceral RE8
+itself; without it the window opens but has nothing to move. With the [Lanes](https://github.com/TefMeister/lanes-plugin)
+plugin for Claude Code you can get it from `/lanes:setup` instead.
+
+Or build it yourself: `build.bat` (only the C# compiler that ships with Windows), then
+`dist\GrabZones.exe --selftest build\selftest` (no game needed), then `install.ps1`.
 
 ## How it works
 
 - The window writes `reframework\data\visceral_re8\zones.json` in the game folder: per gun ("3042") over "default", each
   zone's offset from its joint in the gun's axes (metres) and its radius (metres), plus `_visual.show` for the spheres.
-- The plugin (`..\src\zones.cpp`) re-reads that file within a third of a second of any change and tests the hand against it.
-- The in-game script (`..\lua\visceral_re8_zones.lua`) draws the spheres and writes `zones_state.json` four times a second:
+- Visceral RE8's plugin (`zones.cpp`) re-reads that file within a third of a second of any change and tests the hand against it.
+- Its in-game script (`visceral_re8_zones.lua`) draws the spheres and writes `zones_state.json` four times a second:
   the gun in hand and, per zone, its size and how far the hand is from it. The window reads that for its live lines.
 
 `app\Json.cs` is copied from [Hand Poser](https://github.com/TefMeister/hand-poser-vr).
+
+Moved out of the Visceral RE8 repo into its own on 2026-10-27, with its history.
+
+## Tested
+
+`dist\GrabZones.exe --selftest`: the zone file rules, all pass (2026-10-27). Used inside the headset through
+Window View to tune Visceral RE8's zones since 2026-10-25.
+
+## Credits
+
+- **praydog**, [REFramework](https://github.com/praydog/REFramework), which runs the game half.
+
+If you should be credited here and are not, open an issue on this repository and it will be fixed.
+
+## Licence
+
+MIT for everything in this repository that we wrote.
