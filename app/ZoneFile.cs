@@ -1,4 +1,4 @@
-// ZoneFile.cs -- the two files the Grab Zones window shares with Visceral RE8, both in the game's
+// ZoneFile.cs -- the two files the Grip Zones window shares with Visceral RE8, both in the game's
 // reframework\data\visceral_re8\ folder:
 //   zones.json        WRITTEN HERE (and by the in-game menu): per gun ("3042") over "default": each zone's offset from its joint
 //                     in the gun's axes (x right, y up, z forward, metres) and its radius r (metres); "_visual": { show, half_m }.

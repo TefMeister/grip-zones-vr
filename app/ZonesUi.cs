@@ -1,4 +1,4 @@
-// ZonesUi.cs -- the Grab Zones window. Top: the game and the gun in hand, SHOW THE SPHERES, and whether the sliders set THIS GUN
+// ZonesUi.cs -- the Grip Zones window. Top: the game and the gun in hand, SHOW THE SPHERES, and whether the sliders set THIS GUN
 // or ALL GUNS. Then one box per zone (the magazine grab, the well, the slide / pump / bolt, the front grip): its live line ("hand 14 cm away,
 // needs 12", green when the hand is inside), four sliders (forward / back, up / down, right / left, size) each with - and +
 // buttons for half-centimetre steps (easier than dragging with a VR pointer), and RESET. Every change goes into zones.json at
@@ -37,13 +37,13 @@ class ZonesUi : Form {
     DateTime lastHandWrite = DateTime.MinValue;
 
     public ZonesUi(string gameArg) {
-        Text = "Grab Zones";
+        Text = "Grip Zones";
         BackColor = Back; ForeColor = Ink;
         Font = new Font("Segoe UI", 11f);
         ClientSize = new Size(620, 1010);
         MinimumSize = new Size(520, 600);
         StartPosition = FormStartPosition.CenterScreen;
-        string ico = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "grab_zones.ico");
+        string ico = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "grip_zones.ico");
         try { Icon = new Icon(ico); } catch (Exception) { }
         DoubleBuffered = true;
         Backdrop.Init(this, ico, Back);   // the icon, pixelated and faint, behind the whole window (Tefa 2026-10-25)

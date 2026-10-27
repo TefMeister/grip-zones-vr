@@ -1,4 +1,4 @@
-// Ticks.cs -- the tick boxes on Grab Zones' sliders (2026-10-27, Tefa: "add tick boxes to the grab zones and add the same button
+// Ticks.cs -- the tick boxes on Grip Zones' sliders (2026-10-27, Tefa: "add tick boxes to the grab zones and add the same button
 // bindings as hand poser"). Every slider with a tick box registers here; while any is ticked the controller buttons (Nudge.cs,
 // through Window View) step the ticked ones: X one step down, Y five down, A one up, B five up (one step = one press of its - / +).
 using System;

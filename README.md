@@ -1,4 +1,4 @@
-# Grab Zones: move and resize where the hand can grab a gun in VR
+# Grip Zones: move and resize where the hand can grip a gun in VR
 
 <img src="docs/window.png" width="420">
 
@@ -17,14 +17,14 @@ The same sliders are in the game's REFramework menu under "Visceral RE8 grab zon
 
 ## Get it
 
-Download the zip from [Releases](https://github.com/TefMeister/grab-zones-vr/releases), unzip it, right-click
-`install.ps1` and choose **Run with PowerShell**. A **Grab Zones** icon appears on the desktop; no administrator rights
+Download the zip from [Releases](https://github.com/TefMeister/grip-zones-vr/releases), unzip it, right-click
+`install.ps1` and choose **Run with PowerShell**. A **Grip Zones** icon appears on the desktop; no administrator rights
 are needed. The game half (the plugin that tests the hand and the script that draws the spheres) is part of Visceral RE8
 itself; without it the window opens but has nothing to move. With the [Lanes](https://github.com/TefMeister/lanes-plugin)
 plugin for Claude Code you can get it from `/lanes:setup` instead.
 
 Or build it yourself: `build.bat` (only the C# compiler that ships with Windows), then
-`dist\GrabZones.exe --selftest build\selftest` (no game needed), then `install.ps1`.
+`dist\GripZones.exe --selftest build\selftest` (no game needed), then `install.ps1`.
 
 ## How it works
 
@@ -36,11 +36,13 @@ Or build it yourself: `build.bat` (only the C# compiler that ships with Windows)
 
 `app\Json.cs` is copied from [Hand Poser](https://github.com/TefMeister/hand-poser-vr).
 
-Moved out of the Visceral RE8 repo into its own on 2026-10-27, with its history.
+Moved out of the Visceral RE8 repo into its own on 2026-10-27, with its history, and renamed from Grab Zones
+to Grip Zones the same day (its old settings come along by themselves). The in-game menu keeps its old name,
+"Visceral RE8 grab zones", until the mod is next changed.
 
 ## Tested
 
-`dist\GrabZones.exe --selftest`: the zone file rules, all pass (2026-10-27). Used inside the headset through
+`dist\GripZones.exe --selftest`: the zone file rules, all pass (2026-10-27). Used inside the headset through
 Window View to tune Visceral RE8's zones since 2026-10-25.
 
 ## Credits

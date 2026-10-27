@@ -1,8 +1,8 @@
-// GrabZones.cs -- start-up, settings, gun names and the self-test of the Grab Zones window (Visceral RE8).
+// GripZones.cs -- start-up, settings, gun names and the self-test of the Grip Zones window (Visceral RE8).
 //
-//   GrabZones.exe                      the window
-//   GrabZones.exe --game <folder>      use this game folder instead of looking for Village
-//   GrabZones.exe --selftest <folder>  no window: exercise the zone file in <folder> (a stand-in game folder), print PASS/FAIL
+//   GripZones.exe                      the window
+//   GripZones.exe --game <folder>      use this game folder instead of looking for Village
+//   GripZones.exe --selftest <folder>  no window: exercise the zone file in <folder> (a stand-in game folder), print PASS/FAIL
 //
 // Tefa 2026-10-25: "can you make the gun grip activation sliders a separate thing just like you did with the hand poser, so i
 // can use it with Window View". The same sliders as the in-game menu "Visceral RE8 grab zones", in a desktop window.
@@ -13,7 +13,20 @@ using System.Linq;
 using System.Windows.Forms;
 
 static class Program {
-    public static readonly string AppData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GrabZonesVR");
+    public static readonly string AppData = SettingsFolder();
+
+    // called Grip Zones until 2026-10-27 (Tefa: "can you change the name to grip zones"): the old settings come along once
+    static string SettingsFolder() {
+        string root = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        string now = Path.Combine(root, "GripZonesVR"), old = Path.Combine(root, "GrabZonesVR");
+        try {
+            if (!Directory.Exists(now) && Directory.Exists(old)) {
+                Directory.CreateDirectory(now);
+                foreach (string f in Directory.GetFiles(old)) File.Copy(f, Path.Combine(now, Path.GetFileName(f)));
+            }
+        } catch (IOException) { } catch (UnauthorizedAccessException) { }
+        return now;
+    }
 
     // the guns Visceral RE8 knows (src/weapons.cpp), by number
     public static readonly Dictionary<int, string> Guns = new Dictionary<int, string> {
@@ -101,7 +114,7 @@ static class Program {
     }
 }
 
-// settings.txt: one `key=value` per line, in %APPDATA%\GrabZonesVR.
+// settings.txt: one `key=value` per line, in %APPDATA%\GripZonesVR (GrabZonesVR before the rename).
 class Settings {
     readonly string file = Path.Combine(Program.AppData, "settings.txt");
     readonly Dictionary<string, string> values = new Dictionary<string, string>();

@@ -365,7 +365,7 @@ class FancySlider : Control {
         if (dragging && !Capture) { dragging = false; Invalidate(); if (Released != null) Released(); }
     }
     // 2026-10-25: the wheel moved any slider it passed over while a long window was being scrolled, and Window View's right stick
-    // scrolls with the wheel, so scrolling through Grab Zones in the headset changed values on the way. The wheel now moves a slider
+    // scrolls with the wheel, so scrolling through Grip Zones in the headset changed values on the way. The wheel now moves a slider
     // only once it has been clicked (it has the focus); otherwise it scrolls the list the slider sits in.
     protected override void OnMouseWheel(MouseEventArgs e) {
         if (!Focused || !Enabled) {
