@@ -55,6 +55,8 @@ If you should be credited here and are not, open an issue on this repository and
 
 MIT for everything in this repository that we wrote.
 
-## Dock Poser
+## Gun Poser
 
-A second small window in the same download (2026-10-28). It follows where the left hand is docked right now: the slide (either side), the magazine, rounds from the pouch, the grip handle, the drum, the insert point or a hand pair's landing spot. It shows six sliders for that gun and that spot only: move the hand forward, up or sideways, and tilt, turn or roll it. Every change is saved at once and the hand eases there. Built, not yet tried in the headset.
+A second small window in the same download (2026-10-28). It follows the gun in the right hand and shows six sliders for that gun only: aim it up or down, left or right, roll it, and move it forward, up or sideways in the hand. **ALL GUNS** sets the numbers every gun starts from. They are the same numbers as Grip Zones' "the gun in the right hand" entry, so the two windows always agree. Built, not yet tried in the headset.
+
+(Dock Poser, the docked left wrist, was a window here for one night; it is now the **LEFT HAND, DOCKED** box in [Hand Poser](https://github.com/TefMeister/hand-poser-vr).)

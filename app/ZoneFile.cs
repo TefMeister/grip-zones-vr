@@ -19,7 +19,7 @@ class LiveZone {
 
 class LiveState {
     public int Gun;
-    public int Spot;   // 2026-10-28: where the left hand is (bridge slot 153), for Dock Poser
+    public int Spot;   // 2026-10-28: where the left hand is (bridge slot 153), for Hand Poser's docked wrist box
     public List<LiveZone> Zones = new List<LiveZone>();
     public LiveZone Find(string key) { foreach (var z in Zones) if (z.Key == key) return z; return null; }
 }
