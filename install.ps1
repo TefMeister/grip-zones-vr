@@ -5,7 +5,7 @@ if ($From -eq "") { $From = if (Test-Path (Join-Path $PSScriptRoot "dist\GripZon
 $ErrorActionPreference = "Stop"
 $to = Join-Path $env:LOCALAPPDATA "Programs\GripZones"
 New-Item -ItemType Directory -Force $to | Out-Null
-foreach ($f in "GripZones.exe", "GunPoser.exe", "grip_zones.ico") {
+foreach ($f in "GripZones.exe", "GunPoser.exe", "grip_zones.ico", "gun_poser.ico") {
     if (Test-Path (Join-Path $From $f)) { Copy-Item (Join-Path $From $f) (Join-Path $to $f) -Force }
 }
 $desktop = [Environment]::GetFolderPath("Desktop")
@@ -26,7 +26,7 @@ if (Test-Path (Join-Path $to "GunPoser.exe")) {
     $d = $shell.CreateShortcut((Join-Path $desktop "Gun Poser.lnk"))
     $d.TargetPath = Join-Path $to "GunPoser.exe"
     $d.WorkingDirectory = $to
-    $d.IconLocation = (Join-Path $to "grip_zones.ico") + ",0"
+    $d.IconLocation = (Join-Path $to "gun_poser.ico") + ",0"      # its own icon since 2026-10-28: a machine gun, arrows around it
     $d.Description = "Aim and move the gun in the right hand in VR, per gun"
     $d.Save()
 }

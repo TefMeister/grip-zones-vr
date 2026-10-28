@@ -18,7 +18,7 @@ The same sliders are in the game's REFramework menu under "Visceral RE8 grab zon
 ## Get it
 
 Download the zip from [Releases](https://github.com/TefMeister/grip-zones-vr/releases), unzip it, right-click
-`install.ps1` and choose **Run with PowerShell**. A **Grip Zones** icon appears on the desktop; no administrator rights
+`install.ps1` and choose **Run with PowerShell**. **Grip Zones** and **Gun Poser** icons appear on the desktop; no administrator rights
 are needed. The game half (the plugin that tests the hand and the script that draws the spheres) is part of Visceral RE8
 itself; without it the window opens but has nothing to move. With the [Lanes](https://github.com/TefMeister/lanes-plugin)
 plugin for Claude Code you can get it from `/lanes:setup` instead.
@@ -56,6 +56,11 @@ If you should be credited here and are not, open an issue on this repository and
 MIT for everything in this repository that we wrote.
 
 ## Gun Poser
+
+<img src="docs/gun_poser_icon.png" width="64">
+
+**Download:** [GripZones-v1.2.zip](https://github.com/TefMeister/grip-zones-vr/releases/latest), the same download as Grip
+Zones; `install.ps1` puts a **Gun Poser** icon on the desktop beside it.
 
 A second small window in the same download (2026-10-28). It follows the gun in the right hand and shows six sliders for that gun only: aim it up or down, left or right, roll it, and move it forward, up or sideways in the hand. **ALL GUNS** sets the numbers every gun starts from. They are the same numbers as Grip Zones' "the gun in the right hand" entry, so the two windows always agree. Built, not yet tried in the headset.
 

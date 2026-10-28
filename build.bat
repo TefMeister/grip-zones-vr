@@ -11,8 +11,9 @@ if not exist "%HERE%build" mkdir "%HERE%build"
 if errorlevel 1 (echo APP BUILD FAILED & exit /b 1)
 rem 2026-10-28: Gun Poser, the gun in the right hand per gun: its own window from the same files (gunposer\GunPoser.cs).
 rem (Dock Poser, built here for one night, moved into Hand Poser the same day; its source is in archive\.)
-"%WINDIR%\Microsoft.NET\Framework64\v4.0.30319\csc.exe" /nologo /target:winexe /optimize+ /win32icon:"%HERE%app\grip_zones.ico" ^
+"%WINDIR%\Microsoft.NET\Framework64\v4.0.30319\csc.exe" /nologo /target:winexe /optimize+ /win32icon:"%HERE%app\gun_poser.ico" ^
    /main:GunPoserProgram /out:"%HERE%dist\GunPoser.exe" "%HERE%app\*.cs" "%HERE%gunposer\*.cs"
 if errorlevel 1 (echo GUN POSER BUILD FAILED & exit /b 1)
 copy /y "%HERE%app\grip_zones.ico" "%HERE%dist\" >nul
+copy /y "%HERE%app\gun_poser.ico" "%HERE%dist\" >nul
 echo BUILD OK: %HERE%dist
