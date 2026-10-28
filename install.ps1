@@ -5,7 +5,7 @@ if ($From -eq "") { $From = if (Test-Path (Join-Path $PSScriptRoot "dist\GripZon
 $ErrorActionPreference = "Stop"
 $to = Join-Path $env:LOCALAPPDATA "Programs\GripZones"
 New-Item -ItemType Directory -Force $to | Out-Null
-foreach ($f in "GripZones.exe", "GunPoser.exe", "grip_zones.ico", "gun_poser.ico") {
+foreach ($f in "GripZones.exe", "grip_zones.ico") {
     if (Test-Path (Join-Path $From $f)) { Copy-Item (Join-Path $From $f) (Join-Path $to $f) -Force }
 }
 $desktop = [Environment]::GetFolderPath("Desktop")
@@ -21,13 +21,10 @@ $lnk.Description = "Move and resize where the hand can grip a gun in VR"
 $lnk.Save()
 # 2026-10-28: Dock Poser moved into Hand Poser (its LEFT HAND, DOCKED box): its program and desktop icon go
 foreach ($gone in (Join-Path $to "DockPoser.exe"), (Join-Path $desktop "Dock Poser.lnk")) { if (Test-Path $gone) { Remove-Item $gone -Force } }
-# 2026-10-28: Gun Poser, the gun in the right hand per gun
-if (Test-Path (Join-Path $to "GunPoser.exe")) {
-    $d = $shell.CreateShortcut((Join-Path $desktop "Gun Poser.lnk"))
-    $d.TargetPath = Join-Path $to "GunPoser.exe"
-    $d.WorkingDirectory = $to
-    $d.IconLocation = (Join-Path $to "gun_poser.ico") + ",0"      # its own icon since 2026-10-28: a machine gun, arrows around it
-    $d.Description = "Aim and move the gun in the right hand in VR, per gun"
-    $d.Save()
-}
+# 2026-10-28: Gun Poser moved to its own repo (gun-poser-vr), installed to Programs\GunPoser. The copy that came with
+# Grip Zones goes, and its desktop icon too, but only when that icon still points at this old copy.
+$oldGun = Join-Path $to "GunPoser.exe"
+$gunLnk = Join-Path $desktop "Gun Poser.lnk"
+if ((Test-Path $gunLnk) -and ($shell.CreateShortcut($gunLnk).TargetPath -eq $oldGun)) { Remove-Item $gunLnk -Force }
+foreach ($gone in $oldGun, (Join-Path $to "gun_poser.ico")) { if (Test-Path $gone) { Remove-Item $gone -Force } }
 Write-Output "Installed to $to, icon on the desktop."
