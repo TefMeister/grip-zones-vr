@@ -72,8 +72,9 @@ class ZonesUi : Form {
         boxes.Add(new ZoneBox(this, "drum", "THE DRUM", "revolvers: left grip opens it and holds the hand there; LT loads a round, LT when full closes it"));
         boxes.Add(new ZoneBox(this, "insert", "INSERT POINT", "GM 79: a grenade held with the left grip goes in here; left grip + LT takes one out (live or spent)"));
         handBox = new ValueBox("HAND ON THE BOLT", "the left hand while it holds the slide / pump / bolt: move it, turn it, and arc it over the gun on the way", new[] {
-            new ValueRow("z", "forward / back", "cm", -15, 15, 0.5), new ValueRow("y", "up / down", "cm", -15, 15, 0.5),
-            new ValueRow("x", "right / left", "cm", -15, 15, 0.5), new ValueRow("rx", "tilt fingers up / down", "°", -180, 180, 1),
+            // 2026-10-29 (Tefa: "move them smoothly for the weapon's length worth"): a rifle's length forward / back, not 15 cm
+            new ValueRow("z", "forward / back", "cm", -60, 100, 0.5), new ValueRow("y", "up / down", "cm", -30, 30, 0.5),
+            new ValueRow("x", "right / left", "cm", -30, 30, 0.5), new ValueRow("rx", "tilt fingers up / down", "°", -180, 180, 1),
             new ValueRow("ry", "turn left / right", "°", -180, 180, 1), new ValueRow("rz", "roll", "°", -180, 180, 1),
             new ValueRow("arc", "arc over the gun", "cm", 0, 25, 0.5) }, () => Changed(), (t, h) => Btn(t, h));
         aimBox = new ValueBox("GUN IN THE RIGHT HAND", "where the gun points and sits in the right hand", new[] {
