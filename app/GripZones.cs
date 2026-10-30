@@ -49,7 +49,7 @@ static class Program {
     static readonly HashSet<int> Breaks = new HashSet<int> { 3023 };
     public static bool HasPart(int gun, string key) {
         switch (key) {
-        case "grip": return false;   // 2026-10-30: the left grip no longer holds the weapon, so no front grip (Tefa)
+        case "grip": return MagLongs.Contains(gun) || Breaks.Contains(gun);
         case "mag": return MagPistols.Contains(gun) || MagLongs.Contains(gun);
         case "well": return MagPistols.Contains(gun) || MagLongs.Contains(gun);
         case "part": return MagPistols.Contains(gun) || MagLongs.Contains(gun) || Pumps.Contains(gun);
