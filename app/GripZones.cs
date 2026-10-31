@@ -49,9 +49,9 @@ static class Program {
     static readonly HashSet<int> Breaks = new HashSet<int> { 3023 };
     public static bool HasPart(int gun, string key) {
         switch (key) {
-        // 2026-10-31 (Tefa: "the Grip zones don't show the shotgun front handle grip zone" / "no shell insertion activation
-        // zone at all"): pump shotguns have the front grip again, and their shell port is the "well" zone
-        case "grip": return MagLongs.Contains(gun) || Breaks.Contains(gun) || Pumps.Contains(gun);
+        // 2026-10-31 (Tefa: "no shell insertion activation zone at all"): a pump shotgun's shell port is the "well" zone.
+        // 2026-11-01: no front grip on pump shotguns (their front handle is the pump; the extra one "does nothing", Tefa)
+        case "grip": return MagLongs.Contains(gun) || Breaks.Contains(gun);
         case "mag": return MagPistols.Contains(gun) || MagLongs.Contains(gun);
         case "well": return MagPistols.Contains(gun) || MagLongs.Contains(gun) || Pumps.Contains(gun);
         case "part": return MagPistols.Contains(gun) || MagLongs.Contains(gun) || Pumps.Contains(gun);
