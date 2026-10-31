@@ -49,9 +49,11 @@ static class Program {
     static readonly HashSet<int> Breaks = new HashSet<int> { 3023 };
     public static bool HasPart(int gun, string key) {
         switch (key) {
-        case "grip": return MagLongs.Contains(gun) || Breaks.Contains(gun);
+        // 2026-10-31 (Tefa: "the Grip zones don't show the shotgun front handle grip zone" / "no shell insertion activation
+        // zone at all"): pump shotguns have the front grip again, and their shell port is the "well" zone
+        case "grip": return MagLongs.Contains(gun) || Breaks.Contains(gun) || Pumps.Contains(gun);
         case "mag": return MagPistols.Contains(gun) || MagLongs.Contains(gun);
-        case "well": return MagPistols.Contains(gun) || MagLongs.Contains(gun);
+        case "well": return MagPistols.Contains(gun) || MagLongs.Contains(gun) || Pumps.Contains(gun);
         case "part": return MagPistols.Contains(gun) || MagLongs.Contains(gun) || Pumps.Contains(gun);
         case "handle": return Drums.Contains(gun);   // 2026-10-30: a magazine handgun's left hand holds the magazine instead
         case "slide-left": return MagPistols.Contains(gun);   // 2026-10-28: a pistol slide's left-side sphere
@@ -60,6 +62,7 @@ static class Program {
         default: return true;
         }
     }
+    public static bool IsPump(int gun) { return Pumps.Contains(gun); }   // its "well" is the shell port
     public static string GunName(int n) { string s; return Guns.TryGetValue(n, out s) ? s : ("gun " + n); }
 
     [STAThread]

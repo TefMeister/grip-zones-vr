@@ -139,7 +139,8 @@ class ZonesUi : Form {
         var r = new List<Entry>();
         string partName = partWord.ToLowerInvariant();
         if (Has("mag")) r.Add(new Entry { Key = "mag", Label = "magazine  (LG holds it; LG + LT takes it out, handguns LT + B)", Shows = new Control[] { BoxOf("mag") } });
-        if (Has("well")) r.Add(new Entry { Key = "well", Label = "the well  (where a magazine goes in)", Shows = new Control[] { BoxOf("well") } });
+        bool shellPort = !allGuns.Checked && live != null && Program.IsPump(live.Gun);
+        if (Has("well")) r.Add(new Entry { Key = "well", Label = shellPort ? "the shell port  (where a shell goes in)" : "the well  (where a magazine goes in)", Shows = new Control[] { BoxOf("well") } });
         if (Has("part") && Has("slide-left") && !allGuns.Checked && partName == "slide") {   // a pistol: the slide from either side
             r.Add(new Entry { Key = "part", Label = "slide, right side  (where LG takes it)", Shows = new Control[] { BoxOf("part") } });
             r.Add(new Entry { Key = "slide-left", Label = "slide, left side  (where LG takes it)", Shows = new Control[] { BoxOf("slide-left") } });
@@ -322,6 +323,7 @@ class ZonesUi : Form {
         public string Slot { get { return slot; } }
         string key;
         readonly Label head, note;
+        readonly string wellNote;
         readonly Slider fwd, up, right, size;
         bool userSize;   // the size was set (this gun or the default); otherwise it shows the plugin's own
 
@@ -332,6 +334,7 @@ class ZonesUi : Form {
             Controls.Add(inner);
             head = new SkinLabel { Dock = DockStyle.Top, Height = 28, Font = new Font("Segoe UI Semibold", 12f), ForeColor = Ink };
             note = new SkinLabel { Dock = DockStyle.Top, Height = 24, ForeColor = Dim, Text = what };
+            wellNote = what;
             fwd = new Slider(this, "forward / back", -OFFSET_MM, OFFSET_MM, true);
             up = new Slider(this, "up / down", -OFFSET_MM, OFFSET_MM, true);
             right = new Slider(this, "right / left", -OFFSET_MM, OFFSET_MM, true);
@@ -369,6 +372,11 @@ class ZonesUi : Form {
         public void ShowLive(LiveState live) {
             var z = Live(live);
             string name = slot == "part" ? title.Replace("SLIDE / PUMP / BOLT", key.ToUpperInvariant()) : title;
+            if (slot == "well") {   // 2026-10-31: on a pump shotgun the well is where a shell goes in
+                bool port = live != null && Program.IsPump(live.Gun);
+                if (port) name = "LAND: THE SHELL PORT";
+                note.Text = port ? "where a shell goes in: the round in the left hand (LG) brought inside it" : wellNote;
+            }
             if (z == null || !z.On) {
                 head.Text = name + (live == null ? "" : "  ·  not on this gun right now");
                 head.ForeColor = Dim;
