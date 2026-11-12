@@ -44,7 +44,7 @@ to Grip Zones the same day (its old settings come along by themselves). The in-g
 
 ## Tested
 
-`dist\GripZones.exe --selftest`: the zone file rules, 12 checks, all pass (2026-11-01). Used inside the headset through
+`dist\GripZones.exe --selftest`: the zone file rules, 12 checks, all pass (2026-11-01; again 2026-11-12 for v1.5). Used inside the headset through
 Window View to tune Visceral RE8's zones since 2026-10-25.
 
 ## Credits
