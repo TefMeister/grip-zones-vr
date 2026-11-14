@@ -49,7 +49,7 @@ class ZonesUi : Form {
         Text = "Grip Zones";
         BackColor = Back; ForeColor = Ink;
         Font = new Font("Segoe UI", 11f);
-        ClientSize = new Size(620, 1010);
+        ClientSize = new Size(760, 1010);   // 2026-11-14: wider for the bigger slider names
         MinimumSize = new Size(520, 600);
         StartPosition = FormStartPosition.CenterScreen;
         string ico = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "grip_zones.ico");
@@ -415,7 +415,8 @@ class ZonesUi : Form {
         public Slider(ZoneBox box, string label, int min, int max, bool signed) {
             this.box = box; this.signed = signed;
             Dock = DockStyle.Top; Height = 40; BackColor = Color.Transparent;
-            var name = new SkinLabel { Text = label, Dock = DockStyle.Left, Width = 128, ForeColor = Dim, Padding = new Padding(0, 8, 0, 0) };
+            // 2026-11-14 (Tefa: "make the forward/backward, right/left headlines bigger"): bigger, brighter slider names
+            var name = new SkinLabel { Text = label, Dock = DockStyle.Left, Width = 190, ForeColor = Ink, Font = new Font("Segoe UI Semibold", 12.5f), Padding = new Padding(0, 7, 0, 0) };
             value = new SkinLabel { Dock = DockStyle.Right, Width = 82, ForeColor = Ink, TextAlign = ContentAlignment.MiddleRight };
             var minus = Btn("−", (s, e) => Nudge(-NUDGE_MM), 40); minus.Dock = DockStyle.Right;
             var plus = Btn("+", (s, e) => Nudge(NUDGE_MM), 40); plus.Dock = DockStyle.Right;
