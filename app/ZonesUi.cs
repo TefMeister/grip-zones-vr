@@ -207,8 +207,8 @@ class ZonesUi : Form {
     void ShowNudge() {
         if (nudgeNote == null) return;
         int n = Ticks.Count;
-        nudgeNote.Text = n == 0 ? "tick sliders: X -1, Y -5, A +1, B +5" : !nudge.Linked ? n + " ticked: start Window View, click the left stick in"
-            : n + " ticked: X -1, Y -5, A +1, B +5 (a held grip repeats)";
+        nudgeNote.Text = n == 0 ? "tick sliders: right stick: left / right -1 / +1, up / down +5 / -5; Y clears the ticks" : !nudge.Linked ? n + " ticked: start Window View, click the left stick in"
+            : n + " ticked: right stick -1 / +1 / +5 / -5 (held repeats), Y clears";
         nudgeNote.ForeColor = n > 0 && nudge.Linked ? Good : Dim;
     }
     void NudgeTick() {
