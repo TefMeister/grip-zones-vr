@@ -13,13 +13,15 @@ Each zone's title says live how far the hand is from it and how close it needs t
 zone back to the mod's own numbers; **FORGET THIS GUN'S ZONES** (click twice) does that for the whole gun.
 
 Made 2026-10-25 for tuning the zones inside the headset: Window View hangs this window in VR, the same way as Hand Poser.
-Ticked sliders step with the controller through Window View (X −1, Y −5, A +1, B +5). Only the helper window you clicked last answers the buttons (Hand Poser, Grip Zones, Gun Poser, Animation & Timing):
+Ticked sliders step with the right stick through Window View (left / right −1 / +1, up / down +5 / −5, held repeats); Y clears the ticks. Only the helper window you clicked last answers the buttons (Hand Poser, Grip Zones, Gun Poser, Animation & Timing):
 a click anywhere in it is enough, so ticked boxes in the other windows stay still. Until one is clicked, all answer.
 The same sliders are in the game's REFramework menu under "Visceral RE8 grab zones".
 
 ## Get it
 
-Download the zip from [Releases](https://github.com/TefMeister/grip-zones-vr/releases), unzip it, right-click
+The newest is **v1.7** (2026-11-14): [GripZones-v1.7.zip](https://github.com/TefMeister/grip-zones-vr/releases/download/v1.7/GripZones-v1.7.zip),
+check it against `SHA256SUMS.txt` on the [release page](https://github.com/TefMeister/grip-zones-vr/releases/tag/v1.7).
+Unzip it, right-click
 `install.ps1` and choose **Run with PowerShell**. A **Grip Zones** icon appears on the desktop; no administrator rights
 are needed. The game half (the plugin that tests the hand and the script that draws the spheres) is part of Visceral RE8
 itself; without it the window opens but has nothing to move. With the [Lanes](https://github.com/TefMeister/lanes-plugin)
@@ -44,7 +46,7 @@ to Grip Zones the same day (its old settings come along by themselves). The in-g
 
 ## Tested
 
-`dist\GripZones.exe --selftest`: the zone file rules, 12 checks, all pass (2026-11-01; again 2026-11-12 for v1.5). Used inside the headset through
+`dist\GripZones.exe --selftest`: the zone file rules, 12 checks, all pass (2026-11-01; again 2026-11-12 for v1.5 and 2026-11-14 for v1.7). Used inside the headset through
 Window View to tune Visceral RE8's zones since 2026-10-25.
 
 ## Credits
@@ -59,8 +61,8 @@ MIT for everything in this repository that we wrote.
 
 ## Gun Poser
 
-Gun Poser, the window that aims and moves the gun in the right hand, came in this download for one day (v1.1, v1.2). It
-has its own page and download now: [gun-poser-vr](https://github.com/TefMeister/gun-poser-vr). It writes the same numbers
+Gun Poser, the window that aims and moves the gun in the right hand, was part of Grip Zones for one day (v1.1 and v1.2). It
+has its own page now: [gun-poser-vr](https://github.com/TefMeister/gun-poser-vr). It writes the same numbers
 as Grip Zones' "the gun in the right hand" entry, so the two windows always agree.
 
 (Dock Poser, the docked left wrist, was a window here for one night; it is now the **LEFT HAND, DOCKED** box in [Hand Poser](https://github.com/TefMeister/hand-poser-vr).)
