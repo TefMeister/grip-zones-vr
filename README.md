@@ -18,7 +18,7 @@ a click anywhere in it is enough, so ticked boxes in the other windows stay stil
 The same sliders are in the game's REFramework menu under "Visceral RE8 grab zones".
 
 **Setting a zone from outside the window (2026-11-23).** Write `zones_remote.json` into the game's
-`reframework\dataisceral_re8` folder: `{"seq": 7, "zone": "slide", "forward": 4.0, "up": 2.5, "size": 9.0}` (centimetres,
+`reframework\data\visceral_re8` folder: `{"seq": 7, "zone": "slide", "forward": 4.0, "up": 2.5, "size": 9.0}` (centimetres,
 the sliders' own meaning; a new `seq` each time; `"group": "all"` for the default every gun uses). The open window applies
 it like a slider move and answers in `zones_remote_done.json`. Made for sessions with robot hands and nobody at the
 mouse. `[verified-live 2026-11-23, Village, n=2: the SYG-12's magazine zone moved and sized, seen in the game's own numbers]`
