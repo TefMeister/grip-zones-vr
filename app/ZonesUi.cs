@@ -9,7 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
-class ZonesUi : Form {
+partial class ZonesUi : Form {
     const int POLL_MS = 250, SAVE_DEBOUNCE_MS = 60, FIND_GAME_EVERY_MS = 5000;
     const int OFFSET_MM = 300, SIZE_MIN_MM = 20, SIZE_MAX_MM = 400, NUDGE_MM = 5;
     static readonly Color Back = Color.FromArgb(28, 30, 38), Panel2 = Color.FromArgb(40, 43, 55), Ink = Color.FromArgb(235, 235, 240);
@@ -271,6 +271,7 @@ class ZonesUi : Form {
         foreach (var b in boxes) b.ShowLive(live);
         ShowPart();
         WriteOpen(false);
+        RemotePoll();   // 2026-11-23 (Remote.cs): a zone set from outside, as if the sliders had moved
     }
 
     void RefreshFromFile() {
