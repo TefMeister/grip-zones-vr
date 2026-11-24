@@ -13,7 +13,7 @@ using System.Linq;
 using System.Windows.Forms;
 
 static class Program {
-    public static readonly string AppData = SettingsFolder();
+    public static string AppData = SettingsFolder();   // 2026-11-24: --data <folder> points it elsewhere (the tests, never the real settings)
 
     // called Grip Zones until 2026-10-27 (Tefa: "can you change the name to grip zones"): the old settings come along once
     static string SettingsFolder() {
@@ -70,6 +70,7 @@ static class Program {
         string gameArg = null;
         for (int i = 0; i < args.Length; i++) {
             if (args[i] == "--game" && i + 1 < args.Length) gameArg = args[++i];
+            else if (args[i] == "--data" && i + 1 < args.Length) AppData = args[++i];
             else if (args[i] == "--selftest" && i + 1 < args.Length) return SelfTest(args[++i]) ? 0 : 1;
         }
         Application.EnableVisualStyles();

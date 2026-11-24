@@ -13,7 +13,7 @@ Each zone's title says live how far the hand is from it and how close it needs t
 zone back to the mod's own numbers; **FORGET THIS GUN'S ZONES** (click twice) does that for the whole gun.
 
 Made 2026-10-25 for tuning the zones inside the headset: Window View hangs this window in VR, the same way as Hand Poser.
-Ticked sliders step with the right stick through Window View (left / right −1 / +1, up / down +5 / −5, held repeats); Y clears the ticks. Only the helper window you clicked last answers the buttons (Hand Poser, Grip Zones, Gun Poser, Animation & Timing):
+The controller, through Window View (the same as Hand Poser since 2026-11-24): **LT** on a part ticks its section box (the left stick then walks the sliders of every ticked section), **left stick** picks a slider (a yellow frame), **right stick** tunes it, or every ticked slider in the ticked sections (left / right −1 / +1, up / down −5 / +5, held repeats), **A** ticks the picked slider, **B** unticks the section's sliders, **X** undo / **Y** redo on the last slider used only (the window's one ↶ ↷ pair does the same), and while a grip holds a window nothing here moves. Not worn yet. Only the helper window you clicked last answers the buttons (Hand Poser, Grip Zones, Gun Poser, Animation & Timing):
 a click anywhere in it is enough, so ticked boxes in the other windows stay still. Until one is clicked, all answer.
 The same sliders are in the game's REFramework menu under "Visceral RE8 grab zones".
 

@@ -60,6 +60,8 @@ partial class ZonesUi : Form {
         scroll = new SkinPanel { Dock = DockStyle.Fill, AutoScroll = true, Padding = new Padding(8) };
         Controls.Add(scroll);
         Ticks.NameSection = (c, n) => nudge.Section(c, n);   // 2026-11-08: the buttons reach the zone clicked last
+        nudge.Navigate = true;   // 2026-11-24: Hand Poser's scheme: LT section, LS slider, RS tune, A tick, B untick, X undo, Y redo (NudgeNav.cs)
+        nudge.UndoContext = () => Group() + "|" + entryKey;   // the one undo forgets its steps when the gun or the open part changes
         boxes.Add(new ZoneBox(this, "mag", "START: GRAB THE MAGAZINE", "left grip holds the seated magazine; LT (handguns: LT held + right B) takes it out into the hand"));
         boxes.Add(new ZoneBox(this, "well", "LAND: THE WELL", "where a magazine goes in: LG held + LT (handguns: LG + LT held and a push in)"));
         boxes.Add(new ZoneBox(this, "part", "START: SLIDE / PUMP / BOLT", "left grip in it takes it"));
@@ -120,6 +122,7 @@ partial class ZonesUi : Form {
         two.Controls.Add(thisGun); two.Controls.Add(allGuns);
         var three = Row(42);   // 2026-10-27: the ticked sliders and the controller buttons
         three.Controls.Add(Btn("CLEAR ALL TICKS", (s, e) => Ticks.ClearAll()));
+        AddUndoButtons(three);
         nudgeNote = new SkinLabel { AutoSize = true, ForeColor = Dim, Padding = new Padding(4, 8, 0, 0) };
         three.Controls.Add(nudgeNote);
         top.Controls.Add(three);
@@ -206,16 +209,35 @@ partial class ZonesUi : Form {
     // ---- the controller nudge (Nudge.cs, the same buttons as Hand Poser) -------------------------------------------------
     void ShowNudge() {
         if (nudgeNote == null) return;
+        // 2026-11-24 (Hand Poser's scheme, NudgeNav.cs / SliderUndo.cs): LT a section, the left stick a slider, the right stick tunes
         int n = Ticks.Count;
-        nudgeNote.Text = n == 0 ? "tick sliders: right stick: left / right -1 / +1, up / down +5 / -5; Y clears the ticks" : !nudge.Linked ? n + " ticked: start Window View, click the left stick in"
-            : n + " ticked: right stick -1 / +1 / +5 / -5 (held repeats), Y clears";
-        nudgeNote.ForeColor = n > 0 && nudge.Linked ? Good : Dim;
+        string t = n > 0 ? n + " ticked · " : "";
+        nudgeNote.Text = !nudge.Linked ? t + "start Window View, click the left stick in: LT section, LS slider, RS tune, A tick, X undo"
+            : t + "LT section · LS slider · RS tune · A tick · B untick · X undo · Y redo";
+        nudgeNote.ForeColor = nudge.Linked ? Good : Dim;
     }
     void NudgeTick() {
         bool started;
-        double step = nudge.Poll(Ticks.Count > 0, out started);
+        double step = nudge.Poll(Ticks.Count > 0 || nudge.PickedKey != null, out started);   // 2026-11-24: or the slider the left stick selected
+        ShowUndo();
         if (step == 0) return;
-        Ticks.StepAll((int)step, nudge.Allows);
+        var use = nudge.Filter(Ticks.TickedKeys());   // the ticked sliders of the ticked sections, else the selected one
+        if (started) nudge.BeginUndo(use);            // the last slider(s) used, for the one undo (X, ↶)
+        Ticks.StepKeys((int)step, use);
+    }
+    // 2026-11-24: the window's one undo / redo, on the last slider used (SliderUndo.cs); X / Y on the controller do the same
+    Button undoAll, redoAll;
+    void ShowUndo() {
+        if (undoAll == null) return;
+        bool u = nudge.CanUndo, r = nudge.CanRedo;
+        if (undoAll.Enabled != u) undoAll.Enabled = u;
+        if (redoAll.Enabled != r) redoAll.Enabled = r;
+    }
+    void AddUndoButtons(Control row) {
+        undoAll = Btn("↶", (s, e) => { nudge.UndoLast(false); ShowUndo(); }, 40);
+        redoAll = Btn("↷", (s, e) => { nudge.UndoLast(true); ShowUndo(); }, 40);
+        undoAll.Enabled = redoAll.Enabled = false;
+        row.Controls.Add(undoAll); row.Controls.Add(redoAll);
     }
 
     // ---- the game ---------------------------------------------------------------------------------------------------------
@@ -334,8 +356,8 @@ partial class ZonesUi : Form {
             Dock = DockStyle.Top; Height = 276; BackColor = Color.Transparent; Padding = new Padding(0, 6, 0, 6);
             var inner = new SkinPanel { Dock = DockStyle.Fill, Tint = Color.FromArgb(150, Panel2), Padding = new Padding(8, 4, 8, 4) };
             Controls.Add(inner);
-            if (Ticks.NameSection != null) Ticks.NameSection(inner, "zone:" + slot);   // 2026-11-08 (Nudge.cs)
             head = new SkinLabel { Dock = DockStyle.Top, Height = 28, Font = new Font("Segoe UI Semibold", 12f), ForeColor = Ink };
+            Ticks.Section(inner, head, "zone:" + slot);   // 2026-11-08 (Nudge.cs); 2026-11-24: its section tick in the head
             note = new SkinLabel { Dock = DockStyle.Top, Height = 24, ForeColor = Dim, Text = what };
             wellNote = what;
             // 2026-11-08 (Tefa: "some of the sliders read left and right on them, but actually move the hand the opposite way"):
