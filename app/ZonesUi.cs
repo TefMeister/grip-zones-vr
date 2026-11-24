@@ -257,7 +257,7 @@ partial class ZonesUi : Form {
             status.Text = "connected · no gun in hand: the sliders set ALL GUNS";
             status.ForeColor = Good;
         } else {
-            status.Text = "connected · in hand: " + Program.GunName(live.Gun) + (allGuns.Checked ? " · setting ALL GUNS" : " · setting this gun");
+            status.Text = "connected · in hand: " + Program.GunName(live.Gun) + (allGuns.Checked ? " · setting ALL GUNS" : " · setting this gun") + SpotLine.Read(file.Folder);   // 2026-11-24: the hands' spot numbers (Hand Poser)
             status.ForeColor = Good;
         }
         // the gun changed, or the in-game menu saved: show the numbers now in force (never while a save of ours is pending)
