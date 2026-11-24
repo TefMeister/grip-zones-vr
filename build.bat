@@ -6,8 +6,12 @@ setlocal
 set HERE=%~dp0
 if not exist "%HERE%dist" mkdir "%HERE%dist"
 if not exist "%HERE%build" mkdir "%HERE%build"
+rem 2026-11-25: the shared kit (look, controller buttons, the left stick) is copied from hand-poser-vr\kit; with hand-poser-vr
+rem beside this one, a drifted copy stops the build (python tools\sync_kit.py there brings it in step)
+set KITCHECK=%HERE%..\hand-poser-vr\tools\sync_kit.py
+if exist "%KITCHECK%" (python "%KITCHECK%" --check || (echo KIT OUT OF STEP & exit /b 1))
 "%WINDIR%\Microsoft.NET\Framework64\v4.0.30319\csc.exe" /nologo /target:winexe /optimize+ /win32icon:"%HERE%app\grip_zones.ico" ^
-   /main:Program /out:"%HERE%dist\GripZones.exe" "%HERE%app\*.cs"
+   /main:Program /out:"%HERE%dist\GripZones.exe" "%HERE%app\*.cs" "%HERE%kit\*.cs"
 if errorlevel 1 (echo APP BUILD FAILED & exit /b 1)
 rem Gun Poser was built here 2026-10-28; it has its own repo since that evening (github.com/TefMeister/gun-poser-vr).
 copy /y "%HERE%app\grip_zones.ico" "%HERE%dist\" >nul
