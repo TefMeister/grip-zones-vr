@@ -25,8 +25,8 @@ mouse. `[verified-live 2026-11-23, Village, n=2: the SYG-12's magazine zone move
 
 ## Get it
 
-The newest is **v1.7** (2026-11-14): [GripZones-v1.7.zip](https://github.com/TefMeister/grip-zones-vr/releases/download/v1.7/GripZones-v1.7.zip),
-check it against `SHA256SUMS.txt` on the [release page](https://github.com/TefMeister/grip-zones-vr/releases/tag/v1.7).
+The newest is **v1.8** (2026-11-25): [GripZones-v1.8.zip](https://github.com/TefMeister/grip-zones-vr/releases/download/v1.8/GripZones-v1.8.zip),
+check it against `SHA256SUMS.txt` on the [release page](https://github.com/TefMeister/grip-zones-vr/releases/tag/v1.8).
 Unzip it, right-click
 `install.ps1` and choose **Run with PowerShell**. A **Grip Zones** icon appears on the desktop; no administrator rights
 are needed. The game half (the plugin that tests the hand and the script that draws the spheres) is part of Visceral RE8
@@ -52,7 +52,7 @@ to Grip Zones the same day (its old settings come along by themselves). The in-g
 
 ## Tested
 
-`dist\GripZones.exe --selftest`: the zone file rules, 12 checks, all pass (2026-11-01; again 2026-11-12 for v1.5 and 2026-11-14 for v1.7). Used inside the headset through
+`dist\GripZones.exe --selftest`: the zone file rules, 12 checks, all pass (2026-11-01; again 2026-11-12 for v1.5, 2026-11-14 for v1.7 and 2026-11-25 for v1.8). Used inside the headset through
 Window View to tune Visceral RE8's zones since 2026-10-25.
 
 ## Credits
